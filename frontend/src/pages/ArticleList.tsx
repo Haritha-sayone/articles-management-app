@@ -39,7 +39,6 @@ const ArticleList: React.FC = () => {
             title={article.title}
             summary={article.content}
             onSave={() => console.log(`Save article ${article.id}`)}
-            onViewDetails={() => console.log(`View details of article ${article.id}`)}
           />
         ))}
       </div>

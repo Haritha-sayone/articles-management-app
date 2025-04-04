@@ -1,20 +1,19 @@
 // Ensure this file exists and contains the ArticleCard component
+import React from "react";
 
 interface ArticleCardProps {
     id: number; // Added id property
-    title: string;
+    title: React.ReactNode;
     summary: string;
     onSave: () => void;
-    onViewDetails: () => void;
 }
 
-const ArticleCard: React.FC<ArticleCardProps> = ({ title, summary, onSave, onViewDetails }) => {
+const ArticleCard: React.FC<ArticleCardProps> = ({ title, summary, onSave }) => {
     return (
         <div>
             <h2>{title}</h2>
             <p>{summary}</p>
             <button onClick={onSave}>Save</button>
-            <button onClick={onViewDetails}>View Details</button>
         </div>
     );
 };

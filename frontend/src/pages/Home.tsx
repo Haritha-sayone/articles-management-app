@@ -14,18 +14,24 @@ const Home: React.FC = () => {
       <main className="container">
         <h1>Welcome to Articles Management</h1>
         <SearchBar onSearch={(query: string) => console.log('Search query:', query)} />
-        <h2>Featured Articles</h2>
-        <div className="article-list">
-          {featuredArticles.map(article => (
-            <ArticleCard 
-              key={article.id} 
-              id={article.id} 
-              title={article.title} 
-              summary={article.summary} 
-              onSave={() => console.log(`Save article ${article.id}`)} 
-              onViewDetails={() => console.log(`View details of article ${article.id}`)} 
-            />
-          ))}
+        <div className="featured-articles-section">
+          <h2 className="featured-articles-heading">Featured Articles</h2>
+          <div className="article-list grid-container">
+            {featuredArticles.map(article => (
+              <div className="grid-item article-card" key={article.id}>
+                <ArticleCard 
+                  id={article.id} 
+                  title={
+                    <a href={`/articles/${article.id}`} className="article-title-link">
+                      {article.title}
+                    </a>
+                  } 
+                  summary={article.summary} 
+                  onSave={() => console.log(`Save article ${article.id}`)} 
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </main>
     </div>

@@ -4,12 +4,15 @@ html, body, #root {
     height: 100%;
     width: 100%; /* Ensure full width */
     font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column; /* Ensure vertical stacking of elements */
 }
 
 body {
     display: flex;
     flex-direction: column; /* Arrange header, main, and footer vertically */
     min-height: 100vh; /* Ensure body spans the full viewport height */
+    flex-grow: 1; /* Allow body to grow and fill available space */
 }
 
 header {
@@ -49,7 +52,7 @@ nav a:hover {
 }
 
 main {
-    flex-grow: 1; /* Allow main content to take up remaining space */
+    flex-grow: 1; /* Ensure main content takes up remaining space */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -62,10 +65,20 @@ footer {
     color: white;
     text-align: center;
     padding: 1rem;
-    position: static; /* Ensure footer is not repeated or overlaps */
+    position: relative; /* Remove static positioning */
+    margin-top: auto; /* Push footer to the bottom */
     bottom: 0;
     width: 100%;
     flex-shrink: 0; /* Prevent footer from shrinking */
+}
+
+footer a {
+    margin: 0 1rem; /* Add horizontal spacing between links */
+    text-decoration: none; /* Ensure links are styled consistently */
+}
+
+footer a:last-child {
+    margin-right: 0; /* Remove extra margin for the last link */
 }
 
 .container {
@@ -80,10 +93,34 @@ footer {
     padding: 1rem;
     margin: 1rem 0;
     transition: box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
+    justify-content: center; /* Center content vertically */
+    height: 100%; /* Ensure consistent height for all cards */
+    text-align: center; /* Center text inside the card */
 }
 
 .article-card:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.article-card button {
+    margin: auto; /* Center the button horizontally and vertically */
+    display: block; /* Ensure the button behaves as a block element */
+    align-self: center; /* Center the button horizontally */
+    position: relative; /* Ensure proper positioning */
+}
+
+.article-title-link {
+    text-decoration: none; /* Remove underline from the link */
+    color: #007bff; /* Use a link color */
+    font-weight: bold; /* Make the title bold */
+    transition: color 0.3s; /* Smooth transition for hover effect */
+}
+
+.article-title-link:hover {
+    color: #0056b3; /* Darker color on hover */
 }
 
 .search-bar {
@@ -145,6 +182,48 @@ footer {
     background-color: #218838;
 }
 
+/* Responsive grid layout for article list */
+.grid-container {
+  display: grid;
+  gap: 1rem;
+  align-items: stretch; /* Stretch items to match height */
+}
+
+.grid-item {
+  background-color: #ffffff; /* Change to white for better contrast */
+  color: #333; /* Darker text for readability */
+  border: 1px solid #ddd; /* Subtle border for separation */
+  border-radius: 8px; /* Rounded corners */
+  padding: 1rem; /* Internal spacing */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth hover effect */
+}
+
+.grid-item:hover {
+  transform: translateY(-5px); /* Lift effect on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+@media (max-width: 600px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Medium screens: 3 articles per row */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Very large screens: 4 articles per row */
+@media (min-width: 1025px) {
+  .grid-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
     header {
         flex-wrap: wrap; /* Allow wrapping for smaller screens */
@@ -155,7 +234,8 @@ footer {
 
     footer {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center; /* Center align items */
+        text-align: center; /* Center align footer text */
     }
 
     .search-bar {
@@ -195,4 +275,22 @@ footer {
     .qna-section button {
         width: 100%; /* Full width button for small screens */
     }
+}
+
+.featured-articles-section {
+    text-align: center; /* Center align the entire section */
+    margin-top: 2rem; /* Add spacing above the section */
+}
+
+.featured-articles-heading {
+    font-size: 2rem; /* Adjust font size for better visibility */
+    margin-bottom: 1.5rem; /* Add spacing below the heading */
+    color: #333; /* Use a darker color for better contrast */
+}
+
+.article-list {
+    display: flex;
+    justify-content: center; /* Center the articles horizontally */
+    flex-wrap: wrap; /* Allow wrapping for responsiveness */
+    gap: 1.5rem; /* Add spacing between articles */
 }
