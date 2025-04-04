@@ -1,31 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-// import './Header.css'; // Assuming you will create a CSS file for styling
+// import React from 'react';
+// import './Header.css';
 
-const Header: React.FC = () => {
+const Header = () => {
   return (
-    <header className="header">
-      <div className="logo">
-        <Link to="/">Articles Management</Link>
-      </div>
-      <nav className="nav">
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/articles">Articles</Link>
-          </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/register">Register</Link>
-          </li>
-          <li>
-            <Link to="/profile">Profile</Link>
-          </li>
-        </ul>
+    <header>
+      <h1>My App</h1>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/articles">Articles</a>
+        <a href="/login">Login</a>
+        <a href="/profile">Profile</a>
       </nav>
     </header>
   );

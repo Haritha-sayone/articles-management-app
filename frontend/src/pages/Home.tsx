@@ -1,6 +1,4 @@
 import React from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import ArticleCard from '../components/ArticleCard';
 import SearchBar from '../components/SearchBar';
 
@@ -13,7 +11,6 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <Header />
       <main className="container">
         <h1>Welcome to Articles Management</h1>
         <SearchBar onSearch={(query: string) => console.log('Search query:', query)} />
@@ -31,7 +28,6 @@ const Home: React.FC = () => {
           ))}
         </div>
       </main>
-      <Footer />
     </div>
   );
 };
