@@ -1,9 +1,15 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register: React.FC = () => {
+  const navigate = useNavigate();
+
   const validationSchema = Yup.object({
     name: Yup.string()
       .required('Name is required')
@@ -32,8 +38,15 @@ const Register: React.FC = () => {
       confirmPassword: '',
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log('Register Data:', values);
+    onSubmit: async (values) => {
+      try {
+        await createUserWithEmailAndPassword(auth, values.email, values.password);
+        toast.success('Account created successfully!');
+        navigate('/login');
+      } catch (error) {
+        toast.error('Failed to create account. Please try again.');
+        console.error('Error registering user:', error);
+      }
     },
   });
 

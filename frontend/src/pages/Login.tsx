@@ -1,10 +1,19 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
+import { useDispatch } from 'react-redux';
+import { login } from '../store/authSlice';
 import googleLogo from '../assets/images/google-logo.png';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const validationSchema = Yup.object({
     email: Yup.string()
       .email('Invalid email format')
@@ -24,13 +33,32 @@ const Login: React.FC = () => {
       password: '',
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log('Login Data:', values);
+    onSubmit: async (values) => {
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+        const user = userCredential.user;
+        dispatch(login(user.email || '')); // Dispatch login action with the user's email
+        toast.success('Logged in successfully!');
+        navigate('/profile');
+      } catch (error) {
+        toast.error('Failed to log in. Please check your credentials.');
+        console.error('Error logging in:', error);
+      }
     },
   });
 
-  const handleGoogleSignIn = () => {
-    console.log('Sign in with Google clicked');
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const userCredential = await signInWithPopup(auth, provider);
+      const user = userCredential.user;
+      dispatch(login(user.email || '')); // Dispatch login action with the user's email
+      toast.success('Logged in with Google successfully!');
+      navigate('/profile');
+    } catch (error) {
+      toast.error('Failed to log in with Google. Please try again.');
+      console.error('Error with Google Sign-In:', error);
+    }
   };
 
   return (
@@ -46,8 +74,8 @@ const Login: React.FC = () => {
             id="email"
             type="email"
             name="email"
-            value={formik.values.email} // Ensure value is bound to formik state
-            onChange={formik.handleChange} // Ensure onChange updates formik state
+            value={formik.values.email}
+            onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className={`form-control ${formik.touched.email && formik.errors.email ? 'is-invalid' : ''}`}
           />
@@ -61,8 +89,8 @@ const Login: React.FC = () => {
             id="password"
             type="password"
             name="password"
-            value={formik.values.password} // Ensure value is bound to formik state
-            onChange={formik.handleChange} // Ensure onChange updates formik state
+            value={formik.values.password}
+            onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className={`form-control ${formik.touched.password && formik.errors.password ? 'is-invalid' : ''}`}
           />

@@ -1,19 +1,30 @@
-// Ensure this file exists and contains the ArticleCard component
 import React from "react";
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 interface ArticleCardProps {
-    id: number; // Added id property
+    id: number;
     title: React.ReactNode;
     summary: string;
     onSave: () => void;
 }
 
-const ArticleCard: React.FC<ArticleCardProps> = ({ title, summary, onSave }) => {
+const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, summary, onSave }) => {
+    const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+
+    const handleSave = () => {
+        if (!isAuthenticated) {
+            alert('You must be logged in to save articles.');
+            return;
+        }
+        onSave();
+    };
+
     return (
         <div>
-            <h2>{title}</h2>
+            <h3>{title}</h3>
             <p>{summary}</p>
-            <button onClick={onSave}>Save</button>
+            <button onClick={handleSave}>Save</button>
         </div>
     );
 };
