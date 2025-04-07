@@ -1,68 +1,115 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { Link } from 'react-router-dom';
 
 const Register: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const validationSchema = Yup.object({
+    name: Yup.string()
+      .required('Name is required')
+      .min(3, 'Name must be at least 3 characters')
+      .max(50, 'Name cannot exceed 50 characters'),
+    email: Yup.string()
+      .email('Invalid email format')
+      .required('Email is required'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(8, 'Password must be at least 8 characters')
+      .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+      .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+      .matches(/[0-9]/, 'Password must contain at least one number')
+      .matches(/[@$!%*?&#]/, 'Password must contain at least one special character'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
+      .required('Confirm Password is required'),
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-    // Handle registration logic here
-  };
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      console.log('Register Data:', values);
+    },
+  });
 
   return (
-    <div className="register-container">
-      <h2>Create an Account</h2>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username</label>
+    <div className="login-container">
+      <h2>Register</h2>
+      <form onSubmit={formik.handleSubmit} className="login-form">
+        <div className="form-group">
+          <label htmlFor="name">Name</label>
           <input
+            id="name"
             type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
+            name="name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className={`form-control ${formik.touched.name && formik.errors.name ? 'is-invalid' : ''}`}
           />
+          {formik.touched.name && formik.errors.name && (
+            <div className="invalid-feedback">{formik.errors.name}</div>
+          )}
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="email">Email</label>
           <input
-            type="email"
             id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+            type="email"
+            name="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className={`form-control ${formik.touched.email && formik.errors.email ? 'is-invalid' : ''}`}
           />
+          {formik.touched.email && formik.errors.email && (
+            <div className="invalid-feedback">{formik.errors.email}</div>
+          )}
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="password">Password</label>
           <input
-            type="password"
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+            type="password"
+            name="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className={`form-control ${formik.touched.password && formik.errors.password ? 'is-invalid' : ''}`}
           />
+          {formik.touched.password && formik.errors.password && (
+            <div className="invalid-feedback">{formik.errors.password}</div>
+          )}
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="confirmPassword">Confirm Password</label>
           <input
-            type="password"
             id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
+            type="password"
+            name="confirmPassword"
+            value={formik.values.confirmPassword}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className={`form-control ${
+              formik.touched.confirmPassword && formik.errors.confirmPassword ? 'is-invalid' : ''
+            }`}
           />
+          {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+            <div className="invalid-feedback">{formik.errors.confirmPassword}</div>
+          )}
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" className="login-button">
+          Create an Account
+        </button>
       </form>
+      <p className="redirect-text">
+        Already have an account? <Link to="/login" className="redirect-link">Login</Link>
+      </p>
     </div>
   );
 };
