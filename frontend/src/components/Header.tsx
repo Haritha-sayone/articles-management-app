@@ -1,13 +1,16 @@
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { logout } from '../store/authSlice';
+import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Header = () => {
+const Header: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   const handleLogout = async () => {
@@ -15,6 +18,7 @@ const Header = () => {
       await signOut(auth);
       dispatch(logout());
       toast.success('Logged out successfully!');
+      navigate('/login');
     } catch (error) {
       toast.error('Failed to log out. Please try again.');
       console.error('Error logging out:', error);

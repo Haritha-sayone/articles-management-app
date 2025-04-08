@@ -3,6 +3,8 @@ html, body, #root {
     padding: 0;
     height: 100%;
     width: 100%; /* Ensure full width */
+    overflow-x: hidden; /* Prevent horizontal scrollbar */
+    box-sizing: border-box; /* Include padding and border in element's width and height */
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column; /* Ensure vertical stacking of elements */
@@ -23,6 +25,8 @@ header {
     padding: 1rem 2rem;
     background-color: #282c34;
     flex-shrink: 0; /* Prevent header from shrinking */
+    width: 100%; /* Ensure header takes full width */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
 header h1 {
@@ -53,6 +57,7 @@ nav a:hover {
 
 main {
     flex-grow: 1; /* Ensure main content takes up remaining space */
+    width: 100%; /* Ensure main content takes full width */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -545,4 +550,50 @@ nav {
         width: 100%; /* Full width links for very small screens */
         text-align: center;
     }
+}
+
+/* Profile picture area styles */
+.profile-pic-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.profile-image-preview {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+  margin-bottom: 0.5rem;
+}
+
+.profile-placeholder {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.edit-profile-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.edit-profile-button:hover {
+  background-color: #0056b3;
 }

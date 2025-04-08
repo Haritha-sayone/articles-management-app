@@ -6,6 +6,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { doc, setDoc } from 'firebase/firestore'; // Firestore methods
+import { db } from '../firebaseConfig'; // Import Firestore database
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -40,7 +42,16 @@ const Register: React.FC = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        await createUserWithEmailAndPassword(auth, values.email, values.password);
+        const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+        const user = userCredential.user;
+
+        // Save user data to Firestore
+        await setDoc(doc(db, 'users', user.uid), {
+          name: values.name,
+          email: values.email,
+          createdAt: new Date().toISOString(),
+        });
+
         toast.success('Account created successfully!');
         navigate('/login');
       } catch (error) {
