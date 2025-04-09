@@ -597,3 +597,15 @@ nav {
 .edit-profile-button:hover {
   background-color: #0056b3;
 }
+
+.profile-pic-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

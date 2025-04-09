@@ -62,7 +62,7 @@ const Profile: React.FC = () => {
     <div className="login-container">
       <h2>User Profile</h2>
       <form onSubmit={formik.handleSubmit} className="login-form">
-        <div className="form-group" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div className="form-group flex-centered">
           <div className="profile-pic-area">
             {profileImage ? (
               <img
