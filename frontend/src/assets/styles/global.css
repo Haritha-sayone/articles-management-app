@@ -609,3 +609,21 @@ nav {
   justify-content: center;
   align-items: center;
 }
+
+.profile-placeholder-circle {
+  width: 100px; /* Same size as profile-image-preview */
+  height: 100px; /* Same size as profile-image-preview */
+  border-radius: 50%;
+  color: white; /* White text color */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.profile-pic-area img,
+.profile-placeholder-circle {
+  margin-bottom: 1rem; /* Add spacing below the image or placeholder */
+}

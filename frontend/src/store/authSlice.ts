@@ -4,6 +4,9 @@ interface User {
   name: string;
   email: string;
   uid: string;
+  phone?: string; // Add phone
+  bio?: string; // Add bio
+  profileImage?: string; // Add profileImage
 }
 
 interface AuthState {

@@ -1,21 +1,37 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { db } from '../firebaseConfig'; // Import Firestore database
 import { doc, setDoc } from 'firebase/firestore'; // Firestore methods
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { login } from '../store/authSlice'; // Import login action
+import { toast } from 'react-toastify'; // Import toast for notifications
+import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 
 const Profile: React.FC = () => {
+  const navigate = useNavigate(); // Initialize navigate function
+  const dispatch = useDispatch(); // Initialize dispatch
   const [profileImage, setProfileImage] = useState<File | null>(null);
 
   // Fetch logged-in user's data from Redux store
   const userData = useSelector((state: RootState) => {
     const user = state.auth.user;
     return user && typeof user === 'object' && 'name' in user && 'email' in user
-      ? (user as { name: string; email: string; uid: string }) // Assuming `uid` is available
-      : { name: '', email: '', uid: '' };
+      ? (user as { name: string; email: string; uid: string; phone?: string; bio?: string; profileImage?: string })
+      : { name: '', email: '', uid: '', phone: '', bio: '', profileImage: '' }; // Default to empty values
   });
+
+  // Function to generate a color based on a string (e.g., user's name or email)
+  const stringToColor = (str: string): string => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const color = `hsl(${hash % 360}, 70%, 80%)`; // Generate HSL color
+    return color;
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -25,10 +41,11 @@ const Profile: React.FC = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: userData?.name || '', // Use user's name from Redux store
-      email: userData?.email || '', // Use user's email from Redux store
-      phone: '',
-      bio: '',
+      name: userData?.name || '', // Autofill name
+      email: userData?.email || '', // Autofill email
+      phone: userData?.phone || '', // Autofill phone
+      bio: userData?.bio || '', // Autofill bio
+      profileImage: userData?.profileImage || null, // Autofill profileImage
     },
     enableReinitialize: true, // Allow form to reinitialize when userData changes
     validationSchema: Yup.object({
@@ -51,8 +68,24 @@ const Profile: React.FC = () => {
           bio: values.bio,
           profileImage: profileImage ? profileImage.name : null, // Save image name if uploaded
         });
+
+        // Update Redux store with the new user details
+        dispatch(
+          login({
+            name: values.name,
+            email: values.email,
+            uid: userData.uid,
+            phone: values.phone,
+            bio: values.bio,
+            profileImage: profileImage ? profileImage.name : undefined,
+          })
+        );
+
+        toast.success('Profile updated successfully!'); // Success toast message
         console.log('Profile updated successfully:', { ...values, profileImage });
+        navigate('/'); // Redirect to Home Page after successful update
       } catch (error) {
+        toast.error('Failed to update profile. Please try again.'); // Error toast message
         console.error('Error updating profile:', error);
       }
     },
@@ -71,7 +104,12 @@ const Profile: React.FC = () => {
                 className="profile-image-preview"
               />
             ) : (
-              <div className="profile-placeholder">
+              <div
+                className="profile-placeholder-circle"
+                style={{
+                  backgroundColor: stringToColor(userData.name || 'Anonymous'), // Use name for color generation
+                }}
+              >
                 {formik.values.name.charAt(0).toUpperCase()}
               </div>
             )}
