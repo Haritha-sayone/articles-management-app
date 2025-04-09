@@ -62,7 +62,7 @@ const Profile: React.FC = () => {
     <div className="login-container">
       <h2>User Profile</h2>
       <form onSubmit={formik.handleSubmit} className="login-form">
-        <div className="form-group">
+        <div className="form-group" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div className="profile-pic-area">
             {profileImage ? (
               <img
@@ -80,18 +80,18 @@ const Profile: React.FC = () => {
               className="edit-profile-button"
               onClick={() => document.getElementById('profileImage')?.click()}
             >
-              Edit Profile
+              {profileImage ? 'Change Image' : 'Upload Image'}
             </button>
           </div>
-          <input
-            type="file"
-            id="profileImage"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="form-control"
-            style={{ display: 'none' }}
-          />
         </div>
+        <input
+          type="file"
+          id="profileImage"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="form-control"
+          style={{ display: 'none' }}
+        />
         <div className="form-group">
           <label htmlFor="name">Name</label>
           <input

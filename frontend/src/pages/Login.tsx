@@ -9,6 +9,8 @@ import { login } from '../store/authSlice';
 import googleLogo from '../assets/images/google-logo.png';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { doc, getDoc } from 'firebase/firestore'; // Import Firestore methods
+import { db } from '../firebaseConfig'; // Import Firestore database
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -37,10 +39,13 @@ const Login: React.FC = () => {
       try {
         const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
         const user = userCredential.user;
-        console.log('user', user);
 
-        dispatch(login({ name: user.displayName || 'Anonymous', email: user.email || '', uid: user.uid || '' })); // Dispatch login action with user details
-        toast.success(`Welcome back, ${user.displayName || 'Anonymous'}!`);
+        // Fetch user details from Firestore
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        const userData = userDoc.exists() ? userDoc.data() : { name: 'Anonymous' };
+
+        dispatch(login({ name: userData.name || 'Anonymous', email: user.email || '', uid: user.uid || '' })); // Dispatch login action with user details
+        toast.success(`Welcome back, ${userData.name || 'Anonymous'}!`);
         navigate('/profile');
       } catch (error) {
         toast.error('Failed to log in. Please check your credentials.');
@@ -53,7 +58,8 @@ const Login: React.FC = () => {
     const provider = new GoogleAuthProvider();
     try {
       const userCredential = await signInWithPopup(auth, provider);
-      const user = userCredential.user;
+      const user = userCredential.user;console.log("user", user);
+      
       dispatch(login({ name: user.displayName || 'Anonymous', email: user.email || '', uid: user.uid || '' })); // Dispatch login action with user details
       toast.success(`Welcome back, ${user.displayName || 'Anonymous'}!`);
       navigate('/profile');
