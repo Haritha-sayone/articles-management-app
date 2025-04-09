@@ -47,13 +47,13 @@ const Register: React.FC = () => {
 
         // Save user data to Firestore
         await setDoc(doc(db, 'users', user.uid), {
-          name: values.name,
+          name: values.name, // Use name directly
           email: values.email,
           createdAt: new Date().toISOString(),
         });
 
         toast.success('Account created successfully!');
-        navigate('/login');
+        navigate('/login'); // Redirect to login page
       } catch (error) {
         toast.error('Failed to create account. Please try again.');
         console.error('Error registering user:', error);

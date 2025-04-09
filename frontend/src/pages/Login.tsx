@@ -37,8 +37,10 @@ const Login: React.FC = () => {
       try {
         const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
         const user = userCredential.user;
-        dispatch(login(user.email || '')); // Dispatch login action with the user's email
-        toast.success('Logged in successfully!');
+        console.log('user', user);
+
+        dispatch(login({ name: user.displayName || 'Anonymous', email: user.email || '', uid: user.uid || '' })); // Dispatch login action with user details
+        toast.success(`Welcome back, ${user.displayName || 'Anonymous'}!`);
         navigate('/profile');
       } catch (error) {
         toast.error('Failed to log in. Please check your credentials.');
@@ -52,8 +54,8 @@ const Login: React.FC = () => {
     try {
       const userCredential = await signInWithPopup(auth, provider);
       const user = userCredential.user;
-      dispatch(login(user.email || '')); // Dispatch login action with the user's email
-      toast.success('Logged in with Google successfully!');
+      dispatch(login({ name: user.displayName || 'Anonymous', email: user.email || '', uid: user.uid || '' })); // Dispatch login action with user details
+      toast.success(`Welcome back, ${user.displayName || 'Anonymous'}!`);
       navigate('/profile');
     } catch (error) {
       toast.error('Failed to log in with Google. Please try again.');
@@ -97,11 +99,6 @@ const Login: React.FC = () => {
           {formik.touched.password && formik.errors.password && (
             <div className="invalid-feedback">{formik.errors.password}</div>
           )}
-        </div>
-        <div className="form-group">
-          <label>
-            <input type="checkbox" name="rememberMe" /> Remember me
-          </label>
         </div>
         <button type="submit" className="login-button">
           Sign in
