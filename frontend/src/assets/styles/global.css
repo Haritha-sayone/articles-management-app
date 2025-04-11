@@ -142,6 +142,7 @@ footer a:last-child {
     border-radius: 5px;
     width: 100%; /* Make input responsive */
     max-width: 400px; /* Limit max width */
+    background-color: #f9f9f9; /* Match background color with the category dropdown */
 }
 
 .search-bar button {
