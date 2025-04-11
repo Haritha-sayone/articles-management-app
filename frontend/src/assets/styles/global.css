@@ -627,3 +627,32 @@ nav {
 .profile-placeholder-circle {
   margin-bottom: 1rem; /* Add spacing below the image or placeholder */
 }
+
+.home-container {
+  width: 100%; /* Take full width of the screen */
+  padding: 1rem; /* Add padding for spacing */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.filters-and-search {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Add spacing between the category filter and search bar */
+  margin-bottom: 2rem; /* Add spacing below the filters */
+}
+
+.category-filter {
+  padding: 0.75rem; /* Add padding for better usability */
+  border: 1px solid #ccc; /* Add border for dropdown */
+  border-radius: 5px; /* Add rounded corners */
+  font-size: 1rem; /* Adjust font size */
+  background-color: #f9f9f9; /* Match background color with the search box */
+  color: #333; /* Ensure text color is consistent */
+  cursor: pointer; /* Add pointer cursor */
+  transition: border-color 0.3s, background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.category-filter:focus {
+  border-color: #007bff; /* Highlight border on focus */
+  outline: none; /* Remove default outline */
+}

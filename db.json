@@ -1,0 +1,94 @@
+{
+  "articles": [
+    {
+      "id": 1,
+      "title": "The Rise of Artificial Intelligence",
+      "summary": "Exploring how AI is transforming industries and shaping the future.",
+      "author": "John Doe",
+      "createdDate": "2023-09-01",
+      "updatedDate": "2023-09-10",
+      "category": "Technology"
+    },
+    {
+      "id": 2,
+      "title": "Top 10 JavaScript Frameworks in 2023",
+      "summary": "A comprehensive guide to the most popular JavaScript frameworks.",
+      "author": "Jane Smith",
+      "createdDate": "2023-08-15",
+      "updatedDate": "2023-08-20",
+      "category": "Technology"
+    },
+    {
+      "id": 3,
+      "title": "Mastering Personal Finance",
+      "summary": "Tips and strategies for managing your finances effectively.",
+      "author": "Emily Johnson",
+      "createdDate": "2023-07-10",
+      "updatedDate": "2023-07-15",
+      "category": "Finance"
+    },
+    {
+      "id": 4,
+      "title": "The Future of Renewable Energy",
+      "summary": "How renewable energy is shaping a sustainable future.",
+      "author": "Michael Brown",
+      "createdDate": "2023-06-20",
+      "updatedDate": "2023-06-25",
+      "category": "Environment"
+    },
+    {
+      "id": 5,
+      "title": "Effective Leadership in Business",
+      "summary": "Key traits and strategies for successful leadership.",
+      "author": "Sarah Wilson",
+      "createdDate": "2023-05-05",
+      "updatedDate": "2023-05-10",
+      "category": "Business"
+    },
+    {
+      "id": 6,
+      "title": "The Psychology of Marketing",
+      "summary": "Understanding consumer behavior to improve marketing strategies.",
+      "author": "David Lee",
+      "createdDate": "2023-04-15",
+      "updatedDate": "2023-04-20",
+      "category": "Marketing"
+    },
+    {
+      "id": 7,
+      "title": "The Impact of Climate Change",
+      "summary": "Examining the effects of climate change on ecosystems and communities.",
+      "author": "Anna Green",
+      "createdDate": "2023-03-01",
+      "updatedDate": "2023-03-05",
+      "category": "Environment"
+    },
+    {
+      "id": 8,
+      "title": "Investing in the Stock Market",
+      "summary": "A beginner's guide to investing in stocks and building wealth.",
+      "author": "Robert White",
+      "createdDate": "2023-02-10",
+      "updatedDate": "2023-02-15",
+      "category": "Finance"
+    },
+    {
+      "id": 9,
+      "title": "The Evolution of E-Commerce",
+      "summary": "How e-commerce has changed the way we shop and do business.",
+      "author": "Laura Black",
+      "createdDate": "2023-01-20",
+      "updatedDate": "2023-01-25",
+      "category": "Business"
+    },
+    {
+      "id": 10,
+      "title": "The Role of Data Science in Healthcare",
+      "summary": "How data science is revolutionizing healthcare and patient outcomes.",
+      "author": "Chris Blue",
+      "createdDate": "2022-12-01",
+      "updatedDate": "2022-12-05",
+      "category": "Technology"
+    }
+  ]
+}
