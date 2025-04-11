@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 const Profile: React.FC = () => {
   const navigate = useNavigate(); // Initialize navigate function
   const dispatch = useDispatch(); // Initialize dispatch
-  const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
   // Fetch logged-in user's data from Redux store
   const userData = useSelector((state: RootState) => {
@@ -33,9 +33,31 @@ const Profile: React.FC = () => {
     return color;
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setProfileImage(e.target.files[0]);
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'profile_preset');
+      formData.append('folder', 'ams/assets/images'); // Specify the folder path
+
+      try {
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+        if (data.secure_url) {
+          setProfileImage(data.secure_url); // Save the uploaded image URL
+          toast.success('Image uploaded successfully!');
+        } else {
+          toast.error('Failed to upload image. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        toast.error('Error uploading image. Please try again.');
+      }
     }
   };
 
@@ -66,7 +88,7 @@ const Profile: React.FC = () => {
           email: values.email,
           phone: values.phone,
           bio: values.bio,
-          profileImage: profileImage ? profileImage.name : null, // Save image name if uploaded
+          profileImage: profileImage || userData.profileImage || null, // Save Cloudinary image URL
         });
 
         // Update Redux store with the new user details
@@ -77,7 +99,7 @@ const Profile: React.FC = () => {
             uid: userData.uid,
             phone: values.phone,
             bio: values.bio,
-            profileImage: profileImage ? profileImage.name : undefined,
+            profileImage: profileImage || userData.profileImage || undefined,
           })
         );
 
@@ -97,9 +119,9 @@ const Profile: React.FC = () => {
       <form onSubmit={formik.handleSubmit} className="login-form">
         <div className="form-group flex-centered">
           <div className="profile-pic-area">
-            {profileImage ? (
+            {profileImage || userData.profileImage ? (
               <img
-                src={URL.createObjectURL(profileImage)}
+                src={profileImage || userData.profileImage}
                 alt="Profile Preview"
                 className="profile-image-preview"
               />
@@ -118,7 +140,7 @@ const Profile: React.FC = () => {
               className="edit-profile-button"
               onClick={() => document.getElementById('profileImage')?.click()}
             >
-              {profileImage ? 'Change Image' : 'Upload Image'}
+              {profileImage || userData.profileImage ? 'Change Image' : 'Upload Image'}
             </button>
           </div>
         </div>

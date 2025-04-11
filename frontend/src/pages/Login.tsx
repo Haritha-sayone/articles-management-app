@@ -44,7 +44,18 @@ const Login: React.FC = () => {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         const userData = userDoc.exists() ? userDoc.data() : { name: 'Anonymous' };
 
-        dispatch(login({ name: userData.name || 'Anonymous', email: user.email || '', uid: user.uid || '' })); // Dispatch login action with user details
+        // Dispatch login action with user details
+        dispatch(
+          login({
+            name: userData.name || 'Anonymous',
+            email: user.email || '',
+            uid: user.uid,
+            phone: userData.phone || '',
+            bio: userData.bio || '',
+            profileImage: userData.profileImage || null,
+          })
+        );
+
         toast.success(`Welcome back, ${userData.name || 'Anonymous'}!`);
         navigate('/profile');
       } catch (error) {
