@@ -6,9 +6,9 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
-import ArticleList from './pages/ArticleList';
 import ArticleDetails from './pages/ArticleDetails';
 import SavedArticles from './pages/SavedArticles';
+import NotFound from './pages/NotFound'; // Import the NotFound page
 import { ToastContainer } from 'react-toastify';
 import store from './store';
 import { RootState } from './store';
@@ -53,8 +53,8 @@ const App = () => {
               </PrivateRoute>
             }
           />
-          <Route path="/articles" element={<ArticleList />} />
           <Route path="/articles/:id" element={<ArticleDetails />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
         <ToastContainer position="top-right" autoClose={3000} />
