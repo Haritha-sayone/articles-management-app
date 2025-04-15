@@ -8,7 +8,6 @@ import { doc, setDoc } from 'firebase/firestore'; // Firestore methods
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import { login } from '../store/authSlice'; // Import login action
 import { toast } from 'react-toastify'; // Import toast for notifications
-import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 
 const Profile: React.FC = () => {
   const navigate = useNavigate(); // Initialize navigate function

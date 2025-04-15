@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
+import { toast } from 'react-toastify'; // Import toast from react-toastify
 
 interface ArticleCardProps {
     id: number;
@@ -15,7 +16,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, summary, onSave, b
 
     const handleSave = () => {
         if (!isAuthenticated) {
-            alert('You must be logged in to save articles.');
+            toast.error('You must be logged in to save articles.'); // Replace alert with toast
             return;
         }
         onSave();

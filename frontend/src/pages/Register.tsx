@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { doc, setDoc } from 'firebase/firestore'; // Firestore methods
 import { db } from '../firebaseConfig'; // Import Firestore database
 

@@ -8,7 +8,6 @@ import { useDispatch } from 'react-redux';
 import { login } from '../store/authSlice';
 import googleLogo from '../assets/images/google-logo.png';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { doc, getDoc } from 'firebase/firestore'; // Import Firestore methods
 import { db } from '../firebaseConfig'; // Import Firestore database
 
