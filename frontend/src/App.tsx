@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import ArticleList from './pages/ArticleList';
 import ArticleDetails from './pages/ArticleDetails';
+import SavedArticles from './pages/SavedArticles'; // Import SavedArticles page
 import { ToastContainer } from 'react-toastify';
 import store from './store';
 import 'react-toastify/dist/ReactToastify.css';
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/articles" element={<ArticleList />} />
           <Route path="/articles/:id" element={<ArticleDetails />} />
+          <Route path="/saved-articles" element={<SavedArticles />} /> {/* Add route for SavedArticles */}
         </Routes>
         <Footer />
         <ToastContainer position="top-right" autoClose={3000} />

@@ -657,3 +657,20 @@ nav {
   border-color: #007bff; /* Highlight border on focus */
   outline: none; /* Remove default outline */
 }
+
+.saved-articles-container {
+  padding: 2rem;
+  text-align: center;
+}
+
+.saved-articles-container h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.article-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}

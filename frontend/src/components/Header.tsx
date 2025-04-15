@@ -30,7 +30,7 @@ const Header: React.FC = () => {
       <h1 style={{ color: 'white', margin: 0 }}>AMS</h1>
       <nav style={{ display: 'flex', gap: '1rem', flexGrow: 1, justifyContent: 'center' }}>
         <a href="/" style={{ color: 'white', textDecoration: 'none' }}>Home</a>
-        <a href="/articles" style={{ color: 'white', textDecoration: 'none' }}>Articles</a>
+        <a href="/saved-articles" style={{ color: 'white', textDecoration: 'none' }}>Saved Articles</a>
       </nav>
       <nav style={{ display: 'flex', gap: '0.5rem' }}>
         {isAuthenticated ? (

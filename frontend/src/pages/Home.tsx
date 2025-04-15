@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveArticle } from '../store/savedArticlesSlice'; // Import saveArticle action
+import { RootState } from '../store'; // Import RootState for type
 import ArticleCard from '../components/ArticleCard';
 import SearchBar from '../components/SearchBar';
 
 const Home: React.FC = () => {
+  const dispatch = useDispatch();
+  const savedArticles = useSelector((state: RootState) => state.savedArticles.articles); // Get saved articles from Redux
   const [articles, setArticles] = useState<{ category: string; id: number; title: string; summary: string }[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<{ category: string }[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -36,6 +41,10 @@ const Home: React.FC = () => {
     }
   };
 
+  const isArticleSaved = (id: number) => {
+    return savedArticles.some((article) => article.id === id); // Check if the article is saved
+  };
+
   return (
     <div>
       <main className="home-container">
@@ -66,7 +75,8 @@ const Home: React.FC = () => {
                     </a>
                   }
                   summary={article.summary}
-                  onSave={() => console.log(`Save article ${article.id}`)}
+                  onSave={() => dispatch(saveArticle(article))} // Dispatch saveArticle action
+                  buttonLabel={isArticleSaved(article.id) ? 'Saved' : 'Save'} // Show "Saved" or "Save"
                 />
               </div>
             ))}
