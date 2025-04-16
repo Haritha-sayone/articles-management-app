@@ -5,13 +5,22 @@ import { removeArticle } from '../store/savedArticlesSlice';
 import ArticleCard from '../components/ArticleCard';
 
 const SavedArticles: React.FC = () => {
-  const savedArticles = useSelector((state: RootState) => state.savedArticles.articles);
+  const userId = useSelector((state: RootState) => state.auth.user?.uid);
+  const savedArticles = useSelector((state: RootState) =>
+    userId && state.savedArticles.articlesByUser
+      ? state.savedArticles.articlesByUser[userId] || []
+      : []
+  );
   const dispatch = useDispatch();
 
   return (
     <div className="saved-articles-container">
       <h1>Saved Articles</h1>
-      {savedArticles.length === 0 ? (
+      {!userId ? (
+        <div className="no-articles-container">
+          <p className="no-articles-message">Please log in to view your saved articles.</p>
+        </div>
+      ) : savedArticles.length === 0 ? (
         <div className="no-articles-container">
           <p className="no-articles-message">No articles to display</p>
         </div>
@@ -26,8 +35,8 @@ const SavedArticles: React.FC = () => {
                     {article.title}
                   </a>
                 }
-                summary={article.summary}
-                onSave={() => dispatch(removeArticle(article.id))} // Dispatch removeArticle action
+                summary={article.summary ?? ""}
+                onSave={() => dispatch(removeArticle({ userId, articleId: article.id }))} // Dispatch removeArticle action
                 buttonLabel="Remove" // Pass "Remove" as the button label
               />
             </div>

@@ -8,24 +8,35 @@ interface Article {
 }
 
 interface SavedArticlesState {
-  articles: Article[];
+  articlesByUser: { [userId: string]: Article[] };
 }
 
 const initialState: SavedArticlesState = {
-  articles: [],
+  articlesByUser: {},
 };
 
 const savedArticlesSlice = createSlice({
   name: 'savedArticles',
   initialState,
   reducers: {
-    saveArticle(state, action: PayloadAction<Article>) {
-      if (!state.articles.find((article) => article.id === action.payload.id)) {
-        state.articles.push(action.payload);
+    saveArticle(state, action: PayloadAction<{ userId: string; article: Article }>) {
+      const { userId, article } = action.payload;
+      // Defensive: Ensure articlesByUser is always an object
+      if (!state.articlesByUser) {
+        state.articlesByUser = {};
+      }
+      if (!state.articlesByUser[userId]) {
+        state.articlesByUser[userId] = [];
+      }
+      if (!state.articlesByUser[userId].find((a) => a.id === article.id)) {
+        state.articlesByUser[userId].push(article);
       }
     },
-    removeArticle(state, action: PayloadAction<number>) {
-      state.articles = state.articles.filter((article) => article.id !== action.payload);
+    removeArticle(state, action: PayloadAction<{ userId: string; articleId: number }>) {
+      const { userId, articleId } = action.payload;
+      if (state.articlesByUser[userId]) {
+        state.articlesByUser[userId] = state.articlesByUser[userId].filter((a) => a.id !== articleId);
+      }
     },
   },
 });

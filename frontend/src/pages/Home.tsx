@@ -7,7 +7,12 @@ import SearchBar from '../components/SearchBar';
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
-  const savedArticles = useSelector((state: RootState) => state.savedArticles.articles); // Get saved articles from Redux
+  const userId = useSelector((state: RootState) => state.auth.user?.uid);
+  const savedArticles = useSelector((state: RootState) =>
+    userId && state.savedArticles.articlesByUser
+      ? state.savedArticles.articlesByUser[userId] || []
+      : []
+  ); // Get saved articles for current user
   const [articles, setArticles] = useState<{ category: string; id: number; title: string; summary: string }[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<{ category: string }[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -37,12 +42,12 @@ const Home: React.FC = () => {
     if (category === 'All') {
       setFilteredArticles(articles);
     } else {
-      setFilteredArticles(articles.filter((article: any) => article.category === category));
+      setFilteredArticles(articles.filter((article) => article.category === category));
     }
   };
 
   const isArticleSaved = (id: number) => {
-    return savedArticles.some((article) => article.id === id); // Check if the article is saved
+    return savedArticles.some((article: { id: number }) => article.id === id); // Check if the article is saved
   };
 
   return (
@@ -78,7 +83,7 @@ const Home: React.FC = () => {
                       </a>
                     }
                     summary={article.summary}
-                    onSave={() => dispatch(saveArticle(article))} // Dispatch saveArticle action
+                    onSave={() => userId && dispatch(saveArticle({ userId, article }))} // Dispatch saveArticle action
                     buttonLabel={isArticleSaved(article.id) ? 'Saved' : 'Save'} // Show "Saved" or "Save"
                   />
                 </div>
