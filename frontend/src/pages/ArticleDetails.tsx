@@ -59,7 +59,6 @@ const ArticleDetails: React.FC = () => {
       <h1 className="article-title">{article.title}</h1>
       <p className="article-author">Author: {article.author}</p>
       <p className="article-date">Published on: {article.createdDate}</p>
-      <p className="article-summary"><strong>Summary:</strong> {article.summary}</p>
       <div className="article-content">
         <p>{article.content}</p>
       </div>
