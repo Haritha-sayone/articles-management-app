@@ -11,23 +11,29 @@ const SavedArticles: React.FC = () => {
   return (
     <div className="saved-articles-container">
       <h1>Saved Articles</h1>
-      <div className="article-list grid-container">
-        {savedArticles.map((article) => (
-          <div className="grid-item article-card" key={article.id}>
-            <ArticleCard
-              id={article.id}
-              title={
-                <a href={`/articles/${article.id}`} className="article-title-link">
-                  {article.title}
-                </a>
-              }
-              summary={article.summary}
-              onSave={() => dispatch(removeArticle(article.id))} // Dispatch removeArticle action
-              buttonLabel="Remove" // Pass "Remove" as the button label
-            />
-          </div>
-        ))}
-      </div>
+      {savedArticles.length === 0 ? (
+        <div className="no-articles-container">
+          <p className="no-articles-message">No articles to display</p>
+        </div>
+      ) : (
+        <div className="article-list grid-container">
+          {savedArticles.map((article) => (
+            <div className="grid-item article-card" key={article.id}>
+              <ArticleCard
+                id={article.id}
+                title={
+                  <a href={`/articles/${article.id}`} className="article-title-link">
+                    {article.title}
+                  </a>
+                }
+                summary={article.summary}
+                onSave={() => dispatch(removeArticle(article.id))} // Dispatch removeArticle action
+                buttonLabel="Remove" // Pass "Remove" as the button label
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

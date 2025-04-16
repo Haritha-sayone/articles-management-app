@@ -64,23 +64,27 @@ const Home: React.FC = () => {
           <SearchBar onSearch={(query: string) => console.log('Search query:', query)} />
         </div>
         <div className="featured-articles-section">
-          <div className="article-list grid-container">
-            {filteredArticles.map((article: any) => (
-              <div className="grid-item article-card" key={article.id}>
-                <ArticleCard
-                  id={article.id}
-                  title={
-                    <a href={`/articles/${article.id}`} className="article-title-link">
-                      {article.title}
-                    </a>
-                  }
-                  summary={article.summary}
-                  onSave={() => dispatch(saveArticle(article))} // Dispatch saveArticle action
-                  buttonLabel={isArticleSaved(article.id) ? 'Saved' : 'Save'} // Show "Saved" or "Save"
-                />
-              </div>
-            ))}
-          </div>
+          {filteredArticles.length === 0 ? (
+            <p className="no-articles-message">No articles to display</p>
+          ) : (
+            <div className="article-list grid-container">
+              {filteredArticles.map((article: any) => (
+                <div className="grid-item article-card" key={article.id}>
+                  <ArticleCard
+                    id={article.id}
+                    title={
+                      <a href={`/articles/${article.id}`} className="article-title-link">
+                        {article.title}
+                      </a>
+                    }
+                    summary={article.summary}
+                    onSave={() => dispatch(saveArticle(article))} // Dispatch saveArticle action
+                    buttonLabel={isArticleSaved(article.id) ? 'Saved' : 'Save'} // Show "Saved" or "Save"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>

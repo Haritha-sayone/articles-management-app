@@ -674,3 +674,16 @@ nav {
   gap: 1.5rem;
   justify-content: center;
 }
+
+.no-articles-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh; /* Adjust height as needed */
+  text-align: center;
+}
+
+.no-articles-message {
+  font-size: 1.5rem;
+  color: #666;
+}
