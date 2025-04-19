@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react'; // Add useState
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,10 +10,12 @@ import googleLogo from '../assets/images/google-logo.png';
 import { toast } from 'react-toastify';
 import { doc, getDoc } from 'firebase/firestore'; // Import Firestore methods
 import { db } from '../firebaseConfig'; // Import Firestore database
+import { ClipLoader } from 'react-spinners';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState<boolean>(false); // Add loading state
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -35,6 +37,7 @@ const Login: React.FC = () => {
     },
     validationSchema,
     onSubmit: async (values) => {
+      setLoading(true);
       try {
         const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
         const user = userCredential.user;
@@ -60,6 +63,8 @@ const Login: React.FC = () => {
       } catch (error) {
         toast.error('Failed to log in. Please check your credentials.');
         console.error('Error logging in:', error);
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -116,8 +121,8 @@ const Login: React.FC = () => {
             <div className="invalid-feedback">{formik.errors.password}</div>
           )}
         </div>
-        <button type="submit" className="login-button">
-          Sign in
+        <button type="submit" className="login-button" disabled={loading}>
+          {loading ? <ClipLoader size={20} color="#ffffff" /> : 'Sign in'} {/* Add spinner */}
         </button>
       </form>
       <p className="forgot-password">

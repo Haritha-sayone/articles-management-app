@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react'; // Add useState
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,9 +7,11 @@ import { auth } from '../firebaseConfig';
 import { toast } from 'react-toastify';
 import { doc, setDoc } from 'firebase/firestore'; // Firestore methods
 import { db } from '../firebaseConfig'; // Import Firestore database
+import { ClipLoader } from 'react-spinners';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false); // Add loading state
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -41,6 +43,7 @@ const Register: React.FC = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
+        setLoading(true); // Set loading to true
         const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
         const user = userCredential.user;
 
@@ -56,6 +59,8 @@ const Register: React.FC = () => {
       } catch (error) {
         toast.error('Failed to create account. Please try again.');
         console.error('Error registering user:', error);
+      } finally {
+        setLoading(false); // Set loading to false
       }
     },
   });
@@ -126,8 +131,8 @@ const Register: React.FC = () => {
             <div className="invalid-feedback">{formik.errors.confirmPassword}</div>
           )}
         </div>
-        <button type="submit" className="login-button">
-          Create an Account
+        <button type="submit" className="login-button" disabled={loading}>
+          {loading ? <ClipLoader size={20} color="#ffffff" /> : 'Create an Account'} {/* Add spinner */}
         </button>
       </form>
       <p className="redirect-text">

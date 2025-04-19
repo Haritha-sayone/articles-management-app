@@ -4,6 +4,7 @@ import { saveArticle } from '../store/savedArticlesSlice'; // Import saveArticle
 import { RootState } from '../store'; // Import RootState for type
 import ArticleCard from '../components/ArticleCard';
 import SearchBar from '../components/SearchBar';
+import { ClipLoader } from 'react-spinners';
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const Home: React.FC = () => {
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>(''); // Add state for search query
+  const [loading, setLoading] = useState<boolean>(true); // Add loading state
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -32,6 +34,8 @@ const Home: React.FC = () => {
         setCategories(uniqueCategories);
       } catch (error) {
         console.error('Error fetching articles:', error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching articles
       }
     };
 
@@ -83,7 +87,11 @@ const Home: React.FC = () => {
           <SearchBar onSearch={(query: string) => setSearchQuery(query)} />
         </div>
         <div className="featured-articles-section">
-          {filteredArticles.length === 0 ? (
+          {loading ? (
+            <div className="loading-container">
+              <ClipLoader size={50} color="#007bff" /> {/* Add spinner */}
+            </div>
+          ) : filteredArticles.length === 0 ? (
             <p className="no-articles-message">No articles to display</p>
           ) : (
             <div className="article-list grid-container">

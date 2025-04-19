@@ -8,11 +8,13 @@ import { doc, setDoc } from 'firebase/firestore'; // Firestore methods
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import { login } from '../store/authSlice'; // Import login action
 import { toast } from 'react-toastify'; // Import toast for notifications
+import { ClipLoader } from 'react-spinners';
 
 const Profile: React.FC = () => {
   const navigate = useNavigate(); // Initialize navigate function
   const dispatch = useDispatch(); // Initialize dispatch
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false); // Add loading state
 
   // Fetch logged-in user's data from Redux store
   const userData = useSelector((state: RootState) => {
@@ -80,6 +82,7 @@ const Profile: React.FC = () => {
       bio: Yup.string().max(200, 'Bio cannot exceed 200 characters'),
     }),
     onSubmit: async (values) => {
+      setLoading(true); // Set loading state to true
       try {
         // Save updated user profile to Firestore
         await setDoc(doc(db, 'users', userData.uid), {
@@ -108,6 +111,8 @@ const Profile: React.FC = () => {
       } catch (error) {
         toast.error('Failed to update profile. Please try again.'); // Error toast message
         console.error('Error updating profile:', error);
+      } finally {
+        setLoading(false); // Set loading state to false
       }
     },
   });
@@ -206,7 +211,9 @@ const Profile: React.FC = () => {
             <div className="invalid-feedback">{formik.errors.bio}</div>
           )}
         </div>
-        <button type="submit" className="login-button">Update Profile</button>
+        <button type="submit" className="login-button" disabled={loading}>
+          {loading ? <ClipLoader size={20} color="#ffffff" /> : 'Update Profile'} {/* Add spinner */}
+        </button>
       </form>
     </div>
   );
