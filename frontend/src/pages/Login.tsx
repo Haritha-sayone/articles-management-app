@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { login } from '../store/authSlice';
 import googleLogo from '../assets/images/google-logo.png';
 import { toast } from 'react-toastify';
-import { doc, getDoc } from 'firebase/firestore'; // Import Firestore methods
+import { doc, getDoc, setDoc } from 'firebase/firestore'; // Add setDoc for first-time user check
 import { db } from '../firebaseConfig'; // Import Firestore database
 import { BeatLoader } from 'react-spinners'; // Replace ClipLoader with BeatLoader
 
@@ -30,6 +30,39 @@ const Login: React.FC = () => {
       .matches(/[@$!%*?&#]/, 'Password must contain at least one special character'),
   });
 
+  const handleLogin = async (user: any) => {
+    const userDocRef = doc(db, 'users', user.uid);
+    const userDoc = await getDoc(userDocRef);
+
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      if (userData?.isFirstLogin) {
+        // Redirect to Profile page for first login
+        toast.success('Welcome! Please complete your profile.');
+        await setDoc(userDocRef, { ...userData, isFirstLogin: false }, { merge: true }); // Update flag
+        navigate('/profile');
+      } else {
+        // Redirect to Home page for subsequent logins
+        toast.success(`Welcome back, ${userData.name || 'Anonymous'}!`);
+        navigate('/');
+      }
+
+      // Dispatch login action with user details
+      dispatch(
+        login({
+          name: userData.name || user.displayName || 'Anonymous',
+          email: user.email || '',
+          uid: user.uid,
+          phone: userData.phone || '',
+          bio: userData.bio || '',
+          profileImage: userData.profileImage || null,
+        })
+      );
+    } else {
+      toast.error('User data not found. Please contact support.');
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -37,34 +70,16 @@ const Login: React.FC = () => {
     },
     validationSchema,
     onSubmit: async (values) => {
-      setLoading(true);
       try {
+        setLoading(true); // Set loading to true
         const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
         const user = userCredential.user;
-
-        // Fetch user details from Firestore
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        const userData = userDoc.exists() ? userDoc.data() : { name: 'Anonymous' };
-
-        // Dispatch login action with user details
-        dispatch(
-          login({
-            name: userData.name || 'Anonymous',
-            email: user.email || '',
-            uid: user.uid,
-            phone: userData.phone || '',
-            bio: userData.bio || '',
-            profileImage: userData.profileImage || null,
-          })
-        );
-
-        toast.success(`Welcome back, ${userData.name || 'Anonymous'}!`);
-        navigate('/profile');
+        await handleLogin(user); // Handle login logic
       } catch (error) {
         toast.error('Failed to log in. Please check your credentials.');
         console.error('Error logging in:', error);
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading to false
       }
     },
   });
@@ -72,15 +87,15 @@ const Login: React.FC = () => {
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     try {
+      setLoading(true); // Set loading to true
       const userCredential = await signInWithPopup(auth, provider);
-      const user = userCredential.user;console.log("user", user);
-      
-      dispatch(login({ name: user.displayName || 'Anonymous', email: user.email || '', uid: user.uid || '' })); // Dispatch login action with user details
-      toast.success(`Welcome back, ${user.displayName || 'Anonymous'}!`);
-      navigate('/profile');
+      const user = userCredential.user;
+      await handleLogin(user); // Handle login logic
     } catch (error) {
       toast.error('Failed to log in with Google. Please try again.');
       console.error('Error with Google Sign-In:', error);
+    } finally {
+      setLoading(false); // Set loading to false
     }
   };
 

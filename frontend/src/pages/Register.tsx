@@ -47,11 +47,12 @@ const Register: React.FC = () => {
         const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
         const user = userCredential.user;
 
-        // Save user data to Firestore
+        // Save user data to Firestore with isFirstLogin flag
         await setDoc(doc(db, 'users', user.uid), {
           name: values.name, // Use name directly
           email: values.email,
           createdAt: new Date().toISOString(),
+          isFirstLogin: true, // Add flag for first login
         });
 
         toast.success('Account created successfully!');
