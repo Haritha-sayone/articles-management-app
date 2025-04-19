@@ -669,6 +669,10 @@ nav {
   outline: none; /* Remove default outline */
 }
 
+.search-input {
+    color: #000; /* Ensure text color is visible */
+}
+
 .saved-articles-container {
   padding: 2rem;
   text-align: center;

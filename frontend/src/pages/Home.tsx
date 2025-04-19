@@ -14,9 +14,10 @@ const Home: React.FC = () => {
       : []
   ); // Get saved articles for current user
   const [articles, setArticles] = useState<{ category: string; id: number; title: string; summary: string }[]>([]);
-  const [filteredArticles, setFilteredArticles] = useState<{ category: string }[]>([]);
+  const [filteredArticles, setFilteredArticles] = useState<{ category: string; id: number; title: string; summary: string }[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState<string>(''); // Add state for search query
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -36,6 +37,19 @@ const Home: React.FC = () => {
 
     fetchArticles();
   }, []);
+
+  useEffect(() => {
+    const filtered = articles.filter(
+      (article) =>
+        article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.summary.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredArticles(
+      selectedCategory === 'All'
+        ? filtered
+        : filtered.filter((article) => article.category === selectedCategory)
+    );
+  }, [searchQuery, articles, selectedCategory]); // Update filteredArticles when searchQuery or selectedCategory changes
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
@@ -66,7 +80,7 @@ const Home: React.FC = () => {
               </option>
             ))}
           </select>
-          <SearchBar onSearch={(query: string) => console.log('Search query:', query)} />
+          <SearchBar onSearch={(query: string) => setSearchQuery(query)} />
         </div>
         <div className="featured-articles-section">
           {filteredArticles.length === 0 ? (
