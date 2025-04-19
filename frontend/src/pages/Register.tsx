@@ -7,7 +7,7 @@ import { auth } from '../firebaseConfig';
 import { toast } from 'react-toastify';
 import { doc, setDoc } from 'firebase/firestore'; // Firestore methods
 import { db } from '../firebaseConfig'; // Import Firestore database
-import { ClipLoader } from 'react-spinners';
+import { BeatLoader } from 'react-spinners'; // Replace ClipLoader with BeatLoader
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -132,7 +132,7 @@ const Register: React.FC = () => {
           )}
         </div>
         <button type="submit" className="login-button" disabled={loading}>
-          {loading ? <ClipLoader size={20} color="#ffffff" /> : 'Create an Account'} {/* Add spinner */}
+          {loading ? <BeatLoader size={10} color="#ffffff" /> : 'Create an Account'} {/* Use BeatLoader */}
         </button>
       </form>
       <p className="redirect-text">

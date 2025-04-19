@@ -10,7 +10,7 @@ import googleLogo from '../assets/images/google-logo.png';
 import { toast } from 'react-toastify';
 import { doc, getDoc } from 'firebase/firestore'; // Import Firestore methods
 import { db } from '../firebaseConfig'; // Import Firestore database
-import { ClipLoader } from 'react-spinners';
+import { BeatLoader } from 'react-spinners'; // Replace ClipLoader with BeatLoader
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -122,7 +122,7 @@ const Login: React.FC = () => {
           )}
         </div>
         <button type="submit" className="login-button" disabled={loading}>
-          {loading ? <ClipLoader size={20} color="#ffffff" /> : 'Sign in'} {/* Add spinner */}
+          {loading ? <BeatLoader size={10} color="#ffffff" /> : 'Sign in'} {/* Use BeatLoader */}
         </button>
       </form>
       <p className="forgot-password">

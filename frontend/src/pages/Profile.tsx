@@ -8,7 +8,7 @@ import { doc, setDoc } from 'firebase/firestore'; // Firestore methods
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import { login } from '../store/authSlice'; // Import login action
 import { toast } from 'react-toastify'; // Import toast for notifications
-import { ClipLoader } from 'react-spinners';
+import { BeatLoader } from 'react-spinners'; // Replace ClipLoader with BeatLoader
 
 const Profile: React.FC = () => {
   const navigate = useNavigate(); // Initialize navigate function
@@ -212,7 +212,7 @@ const Profile: React.FC = () => {
           )}
         </div>
         <button type="submit" className="login-button" disabled={loading}>
-          {loading ? <ClipLoader size={20} color="#ffffff" /> : 'Update Profile'} {/* Add spinner */}
+          {loading ? <BeatLoader size={10} color="#ffffff" /> : 'Update Profile'} {/* Use BeatLoader */}
         </button>
       </form>
     </div>

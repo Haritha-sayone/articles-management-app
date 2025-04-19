@@ -4,7 +4,7 @@ import { saveArticle } from '../store/savedArticlesSlice'; // Import saveArticle
 import { RootState } from '../store'; // Import RootState for type
 import ArticleCard from '../components/ArticleCard';
 import SearchBar from '../components/SearchBar';
-import { ClipLoader } from 'react-spinners';
+import { BeatLoader } from 'react-spinners'; // Replace ClipLoader with BeatLoader
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
@@ -89,7 +89,7 @@ const Home: React.FC = () => {
         <div className="featured-articles-section">
           {loading ? (
             <div className="loading-container">
-              <ClipLoader size={50} color="#007bff" /> {/* Add spinner */}
+              <BeatLoader size={15} color="#007bff" /> {/* Use BeatLoader */}
             </div>
           ) : filteredArticles.length === 0 ? (
             <p className="no-articles-message">No articles to display</p>
