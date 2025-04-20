@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveArticle } from '../store/savedArticlesSlice'; // Import saveArticle action
 import { RootState } from '../store'; // Import RootState for type
@@ -64,9 +64,30 @@ const Home: React.FC = () => {
     }
   };
 
-  const isArticleSaved = (id: number) => {
-    return savedArticles.some((article: { id: number }) => article.id === id); // Check if the article is saved
-  };
+  const isArticleSaved = useMemo(
+    () => (id: number) => savedArticles.some((article: { id: number }) => article.id === id),
+    [savedArticles]
+  );
+
+  const renderedArticles = useMemo(
+    () =>
+      filteredArticles.map((article: any) => (
+        <div className="grid-item article-card" key={article.id}>
+          <ArticleCard
+            id={article.id}
+            title={
+              <a href={`/articles/${article.id}`} className="article-title-link">
+                {article.title}
+              </a>
+            }
+            summary={article.summary}
+            onSave={() => userId && dispatch(saveArticle({ userId, article }))}
+            buttonLabel={isArticleSaved(article.id) ? 'Saved' : 'Save'}
+          />
+        </div>
+      )),
+    [filteredArticles, isArticleSaved, userId, dispatch]
+  );
 
   return (
     <div>
@@ -94,23 +115,7 @@ const Home: React.FC = () => {
           ) : filteredArticles.length === 0 ? (
             <p className="no-articles-message">No articles to display</p>
           ) : (
-            <div className="article-list grid-container">
-              {filteredArticles.map((article: any) => (
-                <div className="grid-item article-card" key={article.id}>
-                  <ArticleCard
-                    id={article.id}
-                    title={
-                      <a href={`/articles/${article.id}`} className="article-title-link">
-                        {article.title}
-                      </a>
-                    }
-                    summary={article.summary}
-                    onSave={() => userId && dispatch(saveArticle({ userId, article }))} // Dispatch saveArticle action
-                    buttonLabel={isArticleSaved(article.id) ? 'Saved' : 'Save'} // Show "Saved" or "Save"
-                  />
-                </div>
-              ))}
-            </div>
+            <div className="article-list grid-container">{renderedArticles}</div>
           )}
         </div>
       </main>

@@ -11,7 +11,7 @@ interface ArticleCardProps {
     buttonLabel?: string; // Add optional buttonLabel prop
 }
 
-const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, summary, onSave, buttonLabel = "Save" }) => {
+const ArticleCard: React.FC<ArticleCardProps> = React.memo(({ title, summary, onSave, buttonLabel = "Save" }) => {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
     const handleSave = () => {
@@ -29,6 +29,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, summary, onSave, b
             <button onClick={handleSave}>{buttonLabel}</button> {/* Use buttonLabel for the button text */}
         </div>
     );
-};
+});
 
 export default ArticleCard;
