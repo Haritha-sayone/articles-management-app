@@ -51,3 +51,34 @@
   background-color: #0056b3;
   transform: scale(1.05);
 }
+
+@media (max-width: 768px) {
+  .article-details-container {
+    padding: 1rem; /* Reduce padding */
+    margin: 1rem; /* Add margin for spacing */
+    font-size: 0.9rem; /* Adjust font size */
+  }
+
+  .article-title {
+    font-size: 1.5rem; /* Reduce title size */
+  }
+
+  .article-content {
+    font-size: 1rem; /* Adjust content font size */
+  }
+}
+
+@media (max-width: 480px) {
+  .article-details-container {
+    padding: 0.5rem; /* Further reduce padding */
+    margin: 0.5rem; /* Further adjust margin */
+  }
+
+  .article-title {
+    font-size: 1.25rem; /* Further reduce title size */
+  }
+
+  .article-content {
+    font-size: 0.875rem; /* Further adjust content font size */
+  }
+}

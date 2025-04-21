@@ -16,6 +16,7 @@ const Profile = lazy(() => import('./pages/Profile'));
 const ArticleDetails = lazy(() => import('./pages/ArticleDetails'));
 const SavedArticles = lazy(() => import('./pages/SavedArticles'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const Chat = lazy(() => import('./pages/Chat'));
 
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -68,6 +69,7 @@ const App = () => {
               }
             />
             <Route path="/articles/:id" element={<ArticleDetails />} />
+            <Route path="/chat" element={<Chat />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

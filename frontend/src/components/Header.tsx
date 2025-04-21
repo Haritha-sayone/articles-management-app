@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { logout } from '../store/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { toast } from 'react-toastify';
@@ -30,6 +30,9 @@ const Header: React.FC = () => {
       <nav style={{ display: 'flex', gap: '1rem', flexGrow: 1, justifyContent: 'center' }}>
         <a href="/" style={{ color: 'white', textDecoration: 'none' }}>Home</a>
         <a href="/saved-articles" style={{ color: 'white', textDecoration: 'none' }}>Saved Articles</a>
+        <Link to="/chat" className="ask-ai-button" style={{ color: 'white', textDecoration: 'none' }}>
+          Ask AI
+        </Link>
       </nav>
       <nav style={{ display: 'flex', gap: '0.5rem' }}>
         {isAuthenticated ? (
