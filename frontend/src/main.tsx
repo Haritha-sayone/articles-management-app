@@ -44,11 +44,11 @@ const AppWithAuth = () => {
 };
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <AppWithAuth />
       </PersistGate>
     </Provider>
-  </StrictMode>
+  // </StrictMode>
 );

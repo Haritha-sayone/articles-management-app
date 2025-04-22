@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { saveArticle } from '../store/savedArticlesSlice'; // Import saveArticle action
@@ -18,7 +18,12 @@ interface Article {
 const ArticleDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
-  const savedArticles = useSelector((state: RootState) => state.savedArticles.articles);
+  const userId = useSelector((state: RootState) => state.auth.user?.uid);
+  const savedArticles = useSelector((state: RootState) =>
+    userId && state.savedArticles.articlesByUser
+      ? state.savedArticles.articlesByUser[userId] || []
+      : []
+  );
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -42,9 +47,10 @@ const ArticleDetails: React.FC = () => {
     fetchArticle();
   }, [id]);
 
-  const isArticleSaved = (id: number) => {
-    return savedArticles.some((article) => article.id === id);
-  };
+  const isArticleSaved = useMemo(
+    () => (id: number) => savedArticles.some((article: { id: number }) => article.id === id),
+    [savedArticles]
+  );
 
   if (loading) {
     return <div className="article-details-container">Loading...</div>;
@@ -65,10 +71,10 @@ const ArticleDetails: React.FC = () => {
       <div className="article-actions">
         <button
           className="action-button"
-          onClick={() => dispatch(saveArticle(article))} // Dispatch saveArticle action
+          onClick={() => userId && dispatch(saveArticle({ userId, article }))}
           disabled={isArticleSaved(article.id)} // Disable button if already saved
         >
-          {isArticleSaved(article.id) ? 'Saved' : 'Save Article'}
+          {isArticleSaved(article.id) ? 'Saved' : 'Save'}
         </button>
       </div>
     </div>

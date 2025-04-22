@@ -9,9 +9,10 @@ interface ArticleCardProps {
     summary: string;
     onSave: () => void;
     buttonLabel?: string; // Add optional buttonLabel prop
+    buttonDisabled?: boolean; // Add optional buttonDisabled prop
 }
 
-const ArticleCard: React.FC<ArticleCardProps> = React.memo(({ title, summary, onSave, buttonLabel = "Save" }) => {
+const ArticleCard: React.FC<ArticleCardProps> = React.memo(({ title, summary, onSave, buttonLabel = "Save", buttonDisabled }) => {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
     const handleSave = () => {
@@ -26,7 +27,7 @@ const ArticleCard: React.FC<ArticleCardProps> = React.memo(({ title, summary, on
         <div>
             <h3>{title}</h3>
             <p>{summary}</p>
-            <button onClick={handleSave}>{buttonLabel}</button> {/* Use buttonLabel for the button text */}
+            <button onClick={handleSave} disabled={buttonDisabled}>{buttonLabel}</button> {/* Use buttonLabel for the button text */}
         </div>
     );
 });
