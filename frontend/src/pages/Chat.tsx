@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { OpenAI } from 'openai'; // Import OpenAI API
+import { HuggingFaceEmbeddings } from '../utils/embedding'; // Import HuggingFaceEmbeddings
+import { Pinecone } from '@pinecone-database/pinecone'; // Import Pinecone
 import './Chat.css'; // Import the CSS file for styling
 
 const Chat: React.FC = () => {
@@ -11,23 +12,65 @@ const Chat: React.FC = () => {
     if (!question.trim()) return;
 
     try {
-      const openai = new OpenAI({ 
-        apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-        dangerouslyAllowBrowser: true // Allow usage in browser-like environments
+      const embeddings = new HuggingFaceEmbeddings(import.meta.env.VITE_HUGGINGFACE_API_KEY);
+      const pinecone = new Pinecone({
+        apiKey: import.meta.env.VITE_PINECONE_API_KEY,
+        fetchApi: window.fetch,
       });
+
+      // Generate embedding for the question
+      let questionEmbedding;
+      try {
+        questionEmbedding = await embeddings.embedQuery(question);
+      } catch (embeddingError) {
+        console.error('Error generating embeddings:', embeddingError);
+        setResponse('Error: Unable to generate embeddings for the question. Please try again later.');
+        return;
+      }
+
+      // Perform similarity search in Pinecone
+      const pineconeIndex = pinecone.Index('articles');
+      const searchResults = await pineconeIndex.query({
+        vector: questionEmbedding,
+        topK: 3, // Retrieve top 3 similar articles
+        includeMetadata: true,
+      });
+
+      if (searchResults.matches.length === 0) {
+        setResponse('No relevant articles found.');
+        return;
+      }
+
+      // Combine content from top articles for context
+      const context = searchResults.matches
+        .map((match: any) => match.metadata.text)
+        .join('\n\n');
 
       let retries = 3; // Number of retries
       let delay = 1000; // Initial delay in milliseconds
 
       while (retries > 0) {
         try {
-          const aiResponse = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo', // Updated model
-            messages: [{ role: 'user', content: question }], // Use messages for chat models
-            max_tokens: 150,
+          // Call Gemini API for response generation
+          const geminiResponse = await fetch(import.meta.env.VITE_GEMINI_API_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${import.meta.env.VITE_GEMINI_API_KEY}`,
+            },
+            body: JSON.stringify({
+              model: 'gemini-1', // Specify the Gemini model
+              prompt: `Context:\n${context}\n\nQuestion: ${question}`,
+              max_tokens: 150,
+            }),
           });
 
-          const answer = aiResponse.choices[0]?.message?.content?.trim() || 'No response available.';
+          if (!geminiResponse.ok) {
+            throw new Error(`Gemini API error: ${geminiResponse.statusText}`);
+          }
+
+          const geminiData = await geminiResponse.json();
+          const answer = geminiData.choices[0]?.text?.trim() || 'No response available.';
           setResponse(answer);
 
           const newEntry = { question, response: answer, votes: 0 };
@@ -35,7 +78,7 @@ const Chat: React.FC = () => {
           setQuestion('');
           return; // Exit the loop on success
         } catch (error: any) {
-          if (error.response?.status === 429 && retries > 0) {
+          if (error.message.includes('429') && retries > 0) {
             console.warn(`Rate limit exceeded. Retrying in ${delay}ms...`);
             await new Promise((resolve) => setTimeout(resolve, delay));
             retries--;
@@ -46,7 +89,7 @@ const Chat: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error('Error fetching AI response:', error);
+      console.error('Error fetching Gemini response:', error);
       setResponse('Error: Unable to fetch response. Please try again later.');
     }
   };

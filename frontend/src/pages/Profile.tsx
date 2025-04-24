@@ -22,7 +22,8 @@ const Profile: React.FC = () => {
     return user && typeof user === 'object' && 'name' in user && 'email' in user
       ? (user as { name: string; email: string; uid: string; phone?: string; bio?: string; profileImage?: string })
       : { name: '', email: '', uid: '', phone: '', bio: '', profileImage: '' }; // Default to empty values
-  });
+  });console.log("userData=",userData);
+  
 
   // Function to generate a color based on a string (e.g., user's name or email)
   const stringToColor = (str: string): string => {

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { logout } from '../store/authSlice';
 import { useNavigate, Link } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
+import { signOut, GoogleAuthProvider } from 'firebase/auth'; // Import GoogleAuthProvider
 import { auth } from '../firebaseConfig';
 import { toast } from 'react-toastify';
 
@@ -14,7 +14,12 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      const provider = new GoogleAuthProvider();
+      if (auth.currentUser?.providerData.some((data) => data.providerId === provider.providerId)) {
+        // Revoke Google session if user is signed in with Google
+        await auth.currentUser?.getIdToken(true); // Refresh token
+      }
+      await signOut(auth); // Sign out from Firebase
       dispatch(logout());
       toast.success('Logged out successfully!');
       navigate('/login');

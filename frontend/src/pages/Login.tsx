@@ -16,6 +16,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState<boolean>(false); // Add loading state
+  const [googleLoading, setGoogleLoading] = useState<boolean>(false); // Add separate loading state for Google Sign-In
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -59,7 +60,31 @@ const Login: React.FC = () => {
         })
       );
     } else {
-      toast.error('User data not found. Please contact support.');
+      // Create a new user document for first-time login
+      const newUser = {
+        name: user.displayName || 'Anonymous',
+        email: user.email || '',
+        uid: user.uid,
+        phone: '',
+        bio: '',
+        profileImage: user.photoURL || null,
+        isFirstLogin: true,
+      };
+      await setDoc(userDocRef, newUser); // Save new user data to Firestore
+      toast.success('Welcome! Please complete your profile.');
+      navigate('/profile');
+
+      // Dispatch login action with new user details
+      dispatch(
+        login({
+          name: newUser.name,
+          email: newUser.email,
+          uid: newUser.uid,
+          phone: newUser.phone,
+          bio: newUser.bio,
+          profileImage: newUser.profileImage,
+        })
+      );
     }
   };
 
@@ -86,8 +111,11 @@ const Login: React.FC = () => {
 
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+      prompt: "select_account",
+    });
     try {
-      setLoading(true); // Set loading to true
+      setGoogleLoading(true); // Set Google loading to true
       const userCredential = await signInWithPopup(auth, provider);
       const user = userCredential.user;
       await handleLogin(user); // Handle login logic
@@ -95,7 +123,7 @@ const Login: React.FC = () => {
       toast.error('Failed to log in with Google. Please try again.');
       console.error('Error with Google Sign-In:', error);
     } finally {
-      setLoading(false); // Set loading to false
+      setGoogleLoading(false); // Set Google loading to false
     }
   };
 
@@ -143,9 +171,15 @@ const Login: React.FC = () => {
       <p className="forgot-password">
         <Link to="/forgot-password" className="redirect-link">Forgot password?</Link>
       </p>
-      <button onClick={handleGoogleSignIn} className="google-signin-button">
-        <img src={googleLogo} alt="Google logo" className="google-logo" />
-        Sign in with Google
+      <button onClick={handleGoogleSignIn} className="google-signin-button" disabled={googleLoading}>
+        {googleLoading ? (
+          <BeatLoader size={10} color="#ffffff" /> // Show loader during Google Sign-In
+        ) : (
+          <>
+            <img src={googleLogo} alt="Google logo" className="google-logo" />
+            Sign in with Google
+          </>
+        )}
       </button>
     </div>
   );

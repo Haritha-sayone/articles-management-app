@@ -5,20 +5,20 @@ import { RootState } from '../store'; // Import RootState for type
 import ArticleCard from '../components/ArticleCard';
 import SearchBar from '../components/SearchBar';
 import { BeatLoader } from 'react-spinners'; // Replace ClipLoader with BeatLoader
-import { HuggingFaceEmbeddings } from '../utils/embedding';
-import { Pinecone } from '@pinecone-database/pinecone';
-import { Document } from '@langchain/core/documents';
-import { PineconeStore } from '@langchain/pinecone';
+// import { HuggingFaceEmbeddings } from '../utils/embedding';
+// import { Pinecone } from '@pinecone-database/pinecone';
+// import { Document } from '@langchain/core/documents';
+// import { PineconeStore } from '@langchain/pinecone';
 import { toast } from 'react-toastify';
 
 const Home: React.FC = () => {
-  const embeddings = new HuggingFaceEmbeddings(
-    import.meta.env.VITE_HUGGINGFACE_API_KEY
-  );
-  const pinecone = new Pinecone({
-    apiKey: import.meta.env.VITE_PINECONE_API_KEY,
-    fetchApi: window.fetch,
-  });
+  // const embeddings = new HuggingFaceEmbeddings(
+  //   import.meta.env.VITE_HUGGINGFACE_API_KEY
+  // );
+  // const pinecone = new Pinecone({
+  //   apiKey: import.meta.env.VITE_PINECONE_API_KEY,
+  //   fetchApi: window.fetch,
+  // });
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.auth.user?.uid);
   const savedArticles = useSelector((state: RootState) =>
@@ -44,28 +44,28 @@ const Home: React.FC = () => {
         // Extract unique categories
         const uniqueCategories = ['All', ...new Set(data.map((article: any) => article.category as string))];
         setCategories(uniqueCategories);
-        try {
-          // Create Pinecone index and store documents
-          const docs = data.map(item => {
-            return new Document({
-              pageContent: item?.content,
-              metadata: {
-                id: item.id,
-                text: item.content,
-              }
-            });
-          });
+        // try {
+        //   // Create Pinecone index and store documents
+        //   const docs = data.map(item => {
+        //     return new Document({
+        //       pageContent: item?.content,
+        //       metadata: {
+        //         id: item.id,
+        //         text: item.content,
+        //       }
+        //     });
+        //   });
 
-          const pineconeIndex = pinecone.Index('articles');
-          await PineconeStore.fromDocuments(docs, embeddings, {
-            pineconeIndex,
-            maxConcurrency: 5,
-          });
-          console.log('Documents successfully embedded and stored in Pinecone:', docs);
-        } catch (embeddingError) {
-          console.error('Error embedding documents:', embeddingError);
-          toast.error(`Error embedding documents: ${embeddingError instanceof Error ? embeddingError.message : String(embeddingError)}`);
-        }
+        //   const pineconeIndex = pinecone.Index('articles');
+        //   await PineconeStore.fromDocuments(docs, embeddings, {
+        //     pineconeIndex,
+        //     maxConcurrency: 5,
+        //   });
+        //   console.log('Documents successfully embedded and stored in Pinecone:', docs);
+        // } catch (embeddingError) {
+        //   console.error('Error embedding documents:', embeddingError);
+        //   toast.error(`Error embedding documents: ${embeddingError instanceof Error ? embeddingError.message : String(embeddingError)}`);
+        // }
 
       } catch (error) {
         toast.error(error instanceof Error ? error.message : String(error)); // Show error message to user

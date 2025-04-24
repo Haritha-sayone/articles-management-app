@@ -68,8 +68,22 @@ const App = () => {
                 </PrivateRoute>
               }
             />
-            <Route path="/articles/:id" element={<ArticleDetails />} />
-            <Route path="/chat" element={<Chat />} />
+            <Route
+              path="/articles/:id"
+              element={
+                <PrivateRoute>
+                  <ArticleDetails />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/chat"
+              element={
+                <PrivateRoute>
+                  <Chat />
+                </PrivateRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
